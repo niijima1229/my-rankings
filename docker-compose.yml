@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./api:/var/www
+      - ./api/docker/web/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+  app:
+    container_name: app
+    build: ./api/docker/app
+    volumes:
+      - ./api:/var/www
+  front:
+    container_name: front
+    build: ./front/docker/front
+    working_dir: /app
+    tty: true
+    volumes:
+      - ./front:/app
+    command: bash -c 'yarn install && yarn start'
+    ports:
+      - 3000:3000
+  db:
+    container_name: db
+    platform: linux/amd64
+    image: 'mysql:latest'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./api/docker/db/data:/var/lib/mysql
+      - ./api/docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 3306:3306
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    volumes:
+      - ./api/docs/openapi/openapi.yml:/app/openapi.yml
+    environment:
+      SWAGGER_JSON: /app/openapi.yml
+    ports:
+      - 8080:8080
+
+  api-mock:
+    image: stoplight/prism:latest
+    ports:
+      - 4010:4010
+    command: mock -h 0.0.0.0 -d /openapi/openapi.yml
+    volumes:
+      - ./api/docs/openapi/:/openapi/
