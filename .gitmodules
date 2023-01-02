@@ -1,3 +1,6 @@
 [submodule "front"]
 	path = front
 	url = git@github.com:niijima1229/my-rankings-front.git
+[submodule "api"]
+	path = api
+	url = git@github.com:niijima1229/my-rankings-api.git
