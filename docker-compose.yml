@@ -41,6 +41,11 @@ services:
       - ./api/docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 3306:3306
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "10081:8080"
   swagger-ui:
     image: swaggerapi/swagger-ui
     volumes:
@@ -49,7 +54,6 @@ services:
       SWAGGER_JSON: /app/openapi.yml
     ports:
       - 8080:8080
-
   api-mock:
     image: stoplight/prism:latest
     ports:
