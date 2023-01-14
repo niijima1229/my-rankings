@@ -1,3 +1,5 @@
+.PHONY: front
+
 ps:
 	docker-compose ps
 destroy:
@@ -10,6 +12,8 @@ down:
 	docker-compose down --remove-orphans
 app:
 	docker-compose exec app bash
+front:
+	docker-compose exec -it front bash
 db:
 	docker-compose exec db sh
 app/install:
