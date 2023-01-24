@@ -14,6 +14,8 @@ app:
 	docker-compose exec app bash
 front:
 	docker-compose exec -it front bash
+front/restart:
+	docker restart front
 db:
 	docker-compose exec db sh
 app/install:
